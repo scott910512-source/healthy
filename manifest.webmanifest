@@ -1,0 +1,14 @@
+{
+  "name": "Project 100 · 12주 감량 트레이너",
+  "short_name": "감량체크",
+  "description": "110kg에서 100kg을 목표로 하는 12주 운동 체크 웹앱",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F7F6F2",
+  "theme_color": "#F7F6F2",
+  "orientation": "portrait-primary",
+  "icons": [
+    {"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
