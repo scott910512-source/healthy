@@ -3,3 +3,49 @@
 @media(max-width:360px){.shell{padding-left:15px;padding-right:15px}.card,.workout-card{padding:20px}.hero h2,.exercise-name{font-size:25px}.plan-day>summary{padding:15px 12px;gap:8px}.stats-grid b{font-size:19px}.form-grid{gap:8px}.page-heading h1{font-size:26px}}
 @media(min-width:680px){.shell{padding-top:30px}.topbar{margin-bottom:34px}.hero{padding:32px}.workout-card{padding:32px}.card{box-shadow:0 7px 25px #28362905}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+/* Keep the exercise and primary action inside the available phone screen. */
+.workout-focus .topbar,.workout-focus .bottom-nav{display:none}
+.workout-focus .shell{height:100vh;height:100dvh;display:flex;flex-direction:column;min-height:0;padding:calc(10px + env(safe-area-inset-top)) 16px calc(10px + env(safe-area-inset-bottom))}
+.workout-focus #app{display:flex;flex-direction:column;flex:1;min-height:0}
+.workout-focus .notice{flex-shrink:0;margin-bottom:8px}
+.workout-focus .workout-top{flex-shrink:0;min-height:44px;margin:0 2px 8px;gap:8px}
+.workout-focus .workout-top>div{min-width:0}
+.workout-focus .workout-top .eyebrow{margin:0;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.workout-focus .workout-top .small{font-size:10px}
+.workout-focus .workout-top>.text-button{flex-shrink:0}
+.workout-focus .workout-card{flex:1;min-height:0;margin:0;padding:0;display:flex;flex-direction:column;overflow:hidden;border-radius:20px}
+.workout-body{padding:24px}
+.workout-footer{padding:0 24px 16px}
+.workout-focus .workout-body{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;padding:16px 18px 4px;scroll-padding:12px;-webkit-overflow-scrolling:touch}
+.workout-focus .workout-footer{flex-shrink:0;padding:10px 18px 4px;border-top:1px solid var(--line);background:var(--card)}
+.workout-focus .progress-track{margin-top:10px;height:4px}
+.workout-focus .progress-caption{margin-top:4px;font-size:10px}
+.workout-focus .exercise-name{font-size:27px;margin-top:14px;line-height:1.25}
+.workout-focus .prescription{font-size:14px;margin:7px 0 2px!important;line-height:1.5}
+.workout-focus .cue{padding:10px 12px;margin:12px 0}
+.workout-focus .cue-label{font-size:10px}
+.workout-focus .cue p{font-size:12px;line-height:1.5;margin-top:3px}
+.workout-focus .load-panel{padding:10px 12px;margin-bottom:4px}
+.workout-focus .load-panel .row{gap:6px}
+.workout-focus .load-panel .row .small{font-size:10px}
+.workout-focus .weight-input{margin:3px 0;gap:8px}
+.workout-focus .weight-input input{font-size:29px;padding:3px 0;min-height:40px}
+.workout-focus #weightNote{font-size:10px;line-height:1.4}
+.workout-focus .details{padding:7px 0;margin-top:6px}
+.workout-focus .details summary{min-height:34px;font-size:12px}
+.workout-focus .workout-footer .primary{margin:0;min-height:50px}
+.workout-focus .workout-actions{display:flex;justify-content:space-between;gap:0;margin-top:2px}
+.workout-focus .workout-actions .text-button{flex:1;min-height:42px;font-size:12px;padding:9px 2px}
+.workout-focus .pause-note{margin:0 0 7px!important;padding:0;background:none;font-size:12px;text-align:center}
+.workout-focus .toast{bottom:calc(112px + env(safe-area-inset-bottom))}
+@media(max-height:700px){
+  .workout-focus .workout-top .small{display:none}
+  .workout-focus .workout-top{margin-bottom:4px;min-height:40px}
+  .workout-focus .workout-body{padding:12px 14px 2px}
+  .workout-focus .workout-footer{padding:8px 14px 2px}
+  .workout-focus .exercise-name{margin-top:10px;font-size:25px}
+  .workout-focus .cue{margin:9px 0;padding:8px 10px}
+  .workout-focus .load-panel{padding:8px 10px}
+  .workout-focus .progress-track{margin-top:8px}
+}

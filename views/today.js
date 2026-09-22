@@ -27,15 +27,16 @@ function workoutView(w,state) {
   const value=draft.weight??task.weight??previous?.weight??exercise?.load?.value??'';
   const weightSource=task.weight!==null?'이번 운동 기록':previous?`직전 ${previous.date.slice(5)} 사용 중량`:'초보 시작 참고값';
   return `<div class="workout-top"><div><p class="eyebrow">${esc(w.title)}</p><span class="muted small">${formatDate(w.date)} · ${w.week}주차</span></div>${button('나가기','leave-workout','text-button')}</div>
-    <section class="card workout-card"><div class="row"><span class="pill">현재 ${w.cursor+1} / ${c.total}종목</span><span class="timer" id="workoutTimer">${timerText(elapsed(w))}</span></div><div class="progress-track" role="progressbar" aria-label="완료한 종목" aria-valuenow="${c.done}" aria-valuemin="0" aria-valuemax="${c.total}"><i style="width:${c.done/c.total*100}%"></i></div><p class="progress-caption">완료 ${c.done}개${c.skipped?' · 건너뜀 '+c.skipped+'개':''} · 화면을 떠나면 자동 일시정지</p>
+    <section class="card workout-card"><div class="workout-body"><div class="row"><span class="pill">현재 ${w.cursor+1} / ${c.total}종목</span><span class="timer" id="workoutTimer">${timerText(elapsed(w))}</span></div><div class="progress-track" role="progressbar" aria-label="완료한 종목" aria-valuenow="${c.done}" aria-valuemin="0" aria-valuemax="${c.total}"><i style="width:${c.done/c.total*100}%"></i></div><p class="progress-caption">완료 ${c.done}개${c.skipped?' · 건너뜀 '+c.skipped+'개':''}</p>
       <h1 class="exercise-name">${esc(task.name)}</h1><p class="prescription">${esc(task.detail)}</p><span class="muted small">예상 ${esc(task.duration)}${task.status==='done'?' · 완료한 종목':task.status==='skipped'?' · 건너뛴 종목':''}</span>
       ${exercise?.cue?`<div class="cue"><span class="cue-label">자세 체크</span><p>${esc(exercise.cue)}</p></div>`:''}
       <form id="taskForm" novalidate>
-      ${exercise?.load?`<div class="load-panel"><div class="row"><label for="taskWeight">사용 중량</label><span class="muted small">${esc(weightSource)}</span></div><div class="weight-input"><input id="taskWeight" name="weight" type="number" min="0" max="500" step="0.5" inputmode="decimal" value="${esc(value)}" placeholder="직접 입력" aria-describedby="weightNote"><span>kg</span></div><p class="muted small" id="weightNote">${exercise.load.value===null?'기구 최저 중량에서 확인하세요.':'기구마다 저항이 달라요. 무거우면 낮춰 주세요.'} 완료할 때 사용 중량으로 확정해요.</p></div>`:''}
-      <details class="details"><summary>운동 강도 기록 <span>선택</span></summary>${field('체감 강도 · RPE 1~10','rpe',draft.rpe??task.rpe??'',{min:1,max:10,step:1,placeholder:'예: 6'})}<p class="muted small">10은 더 반복하기 어려운 최대 강도예요.</p></details></form>
-      ${paused?`<div class="pause-note">잠시 멈췄어요. 이어서 진행할 수 있어요.</div>${button('이어서 운동','resume')}`:button(w.cursor===c.total-1?'완료하고 운동 마치기':'완료하고 다음 '+icon('arrow'),'complete-task')}
-      <div class="workout-actions">${button('이전','previous','text-button',w.cursor===0?'disabled':'')}${button('건너뛰기','skip-task','text-button',paused?'disabled':'')}${button(paused?'기록하고 종료':'일시정지',paused?'end-workout':'pause','text-button')}</div>
-      ${!paused?button('여기까지 기록하고 종료','end-workout','text-button quiet full'):''}
+      ${exercise?.load?`<div class="load-panel"><div class="row"><label for="taskWeight">사용 중량</label><span class="muted small">${esc(weightSource)}</span></div><div class="weight-input"><input id="taskWeight" name="weight" type="number" min="0" max="500" step="0.5" inputmode="decimal" value="${esc(value)}" placeholder="직접 입력" aria-describedby="weightNote"><span>kg</span></div><p class="muted small" id="weightNote">${exercise.load.value===null?'기구 최저 중량에서 확인':'무거우면 낮춰 주세요'} · 완료 시 기록</p></div>`:''}
+      <details class="details effort-details"><summary>운동 강도 기록 <span>선택</span></summary>${field('체감 강도 · RPE 1~10','rpe',draft.rpe??task.rpe??'',{min:1,max:10,step:1,placeholder:'예: 6'})}<p class="muted small">10은 더 반복하기 어려운 최대 강도예요.</p></details></form>
+      </div><div class="workout-footer">
+      ${paused?`<p class="pause-note">잠시 멈췄어요</p>${button('이어서 운동','resume')}`:button(w.cursor===c.total-1?'완료하고 운동 마치기':'완료하고 다음 '+icon('arrow'),'complete-task')}
+      <div class="workout-actions">${button('이전','previous','text-button',w.cursor===0?'disabled':'')}${button('건너뛰기','skip-task','text-button',paused?'disabled':'')}${button(paused?'기록하고 종료':'일시정지',paused?'end-workout':'pause','text-button')}${!paused?button('종료','end-workout','text-button'):''}</div>
+      </div>
     </section>`;
 }
 

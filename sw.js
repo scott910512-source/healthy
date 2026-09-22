@@ -1,4 +1,4 @@
-const CACHE='project100-v7';
+const CACHE='project100-v8';
 const ASSETS=['./','./index.html','./app.js','./styles/app.css','./data/exercises.js','./data/program.js','./domain/schedule.js','./domain/workout.js','./store/storage.js','./views/shared.js','./views/today.js','./views/plan.js','./views/records.js','./views/settings.js','./manifest.webmanifest','./icon.svg'];
 self.addEventListener('install',event=>event.waitUntil((async()=>{
   const previous=await caches.keys();

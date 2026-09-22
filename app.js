@@ -18,6 +18,8 @@ function commit(change,{renderScreen=false}={}) {
 }
 function active(s=state) {return s.workouts.find(w=>w.id===s.activeId);}
 function render() {
+  const focused=view==='today' && workoutOpen && active() && active().status!=='review';
+  document.body.classList.toggle('workout-focus',Boolean(focused));
   document.querySelector('#settingsButton').innerHTML=icon('settings');
   document.querySelectorAll('[data-nav]').forEach(b=>{b.classList.toggle('active',b.dataset.nav===view);b.setAttribute('aria-current',b.dataset.nav===view?'page':'false');});
   root.innerHTML=view==='today'?todayView(state,workoutOpen):view==='plan'?planView(state,week):view==='record'?recordsView(state):settingsView(state);
