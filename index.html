@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#F7F6F2">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="감량체크">
+  <title>Project 100 · 12주 감량 체크</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icon.svg">
+  <style>
+    :root{--bg:#07111e;--card:#101f30;--line:#263c52;--text:#f4f7fb;--muted:#91a4b9;--green:#57e39b;--blue:#5aa9ff;--orange:#ffb45c;--red:#ff7185}
+    *{box-sizing:border-box}html{background:var(--bg);scroll-behavior:smooth}body{margin:0;min-height:100vh;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",sans-serif;background:radial-gradient(circle at 90% 0,#153858 0,transparent 31rem),var(--bg)}
+    button,input,select,textarea{font:inherit}button{cursor:pointer}.shell{max-width:820px;margin:auto;padding:calc(18px + env(safe-area-inset-top)) 16px calc(105px + env(safe-area-inset-bottom))}
+    .top{display:flex;justify-content:space-between;gap:12px;align-items:start;margin-bottom:18px}.eyebrow{margin:0 0 5px;color:var(--green);font-weight:900;font-size:12px;letter-spacing:.13em}.top h1{font-size:25px;line-height:1.15;margin:0}.install{border:1px solid #44617e;background:#162b40;color:#fff;border-radius:12px;padding:9px 12px;font-size:13px;font-weight:800}.install[hidden]{display:none}
+    .hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#163852,#0e2638 60%,#174b3b);border:1px solid #2d516a;border-radius:24px;padding:21px;box-shadow:0 16px 44px #0007}.hero:after{content:"";position:absolute;width:180px;height:180px;border:32px solid #fff1;border-radius:50%;right:-92px;top:-92px}.hero-head{display:flex;justify-content:space-between;gap:10px;align-items:start}.hero h2{margin:4px 0 6px;font-size:27px}.muted{color:var(--muted)}.week-pill,.tag{white-space:nowrap;background:#ffffff12;border:1px solid #ffffff1a;padding:6px 9px;border-radius:99px;font-weight:800;font-size:12px}.bar{height:9px;background:#061421;border-radius:99px;overflow:hidden;margin:18px 0 8px}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),#bbf57d);border-radius:inherit;transition:.3s}.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:17px}.stat{background:#07131c66;border:1px solid #ffffff10;border-radius:15px;padding:11px}.stat b{display:block;font-size:20px;font-variant-numeric:tabular-nums}.stat span{font-size:11px;color:#aebdcc}
+    .section{margin-top:20px}.section-title{display:flex;justify-content:space-between;align-items:center;margin:0 2px 10px}.section-title h3{margin:0;font-size:18px}.linkbtn{border:0;background:none;color:var(--blue);font-size:13px;font-weight:800}.card{background:linear-gradient(150deg,var(--card),#0d1b2a);border:1px solid var(--line);border-radius:20px;padding:17px;box-shadow:0 10px 26px #0003}.callout{border-left:4px solid var(--orange);padding:13px 14px;background:#ffb45c12;border-radius:12px;color:#ffe0b7;font-size:13px;line-height:1.55;margin-bottom:12px}
+    .session-head{display:flex;justify-content:space-between;gap:12px;align-items:start}.session-title{font-size:20px;font-weight:900}.session-meta{font-size:12px;color:var(--muted);margin-top:4px}.tag{color:#b8dbff;border-color:#5aa9ff44;background:#5aa9ff1a}.task{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;border-top:1px solid #ffffff0d;padding:13px 0}.task:first-of-type{margin-top:11px}.task input{width:22px;height:22px;accent-color:var(--green)}.task.done .task-main{text-decoration:line-through;color:#718499}.task-main{font-size:14px;font-weight:750}.task-sub{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.4}.task-time{font-variant-numeric:tabular-nums;color:#b9c9da;font-size:12px;text-align:right}.complete{width:100%;border:0;border-radius:14px;padding:13px;background:var(--green);color:#052016;font-weight:900;margin-top:8px}.complete.alt{background:#1f354b;color:#cbd8e5}
+    .week-switch{display:grid;grid-template-columns:44px 1fr 44px;gap:8px;align-items:center;margin-top:13px}.week-switch button{height:42px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:#fff;font-size:20px}.week-label{text-align:center;font-weight:900}.day-tabs{display:flex;gap:7px;overflow:auto;padding:10px 1px 3px;scrollbar-width:none}.day-tabs button{min-width:56px;padding:9px 6px;border-radius:12px;border:1px solid var(--line);background:#0d1c2b;color:#9fb1c4}.day-tabs button.active{background:var(--blue);border-color:var(--blue);color:#07111e;font-weight:900}.plan-list{display:grid;gap:9px}.plan-row{display:grid;grid-template-columns:55px 1fr auto;gap:10px;align-items:center;border:1px solid var(--line);border-radius:15px;padding:12px;background:#0c1a28}.plan-row strong{font-size:13px}.plan-row .name{font-size:14px;font-weight:780}.plan-row .detail{font-size:11px;color:var(--muted);margin-top:4px}.state{font-size:11px;color:var(--green);font-weight:900}
+    .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.field label{display:block;font-size:11px;color:var(--muted);margin:0 0 6px 2px}.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);background:#091725;color:#fff;border-radius:12px;padding:12px;outline:none}.field input:focus,.field textarea:focus{border-color:var(--blue)}.field.full{grid-column:1/-1}.save{border:0;background:var(--blue);color:#061524;border-radius:13px;padding:12px;font-weight:900;width:100%;margin-top:10px}.log-list{display:grid;gap:8px;margin-top:12px}.log{display:grid;grid-template-columns:1fr auto;gap:8px;padding:11px;border-radius:13px;background:#0a1826;border:1px solid #1d3449}.log b{font-size:14px}.log small{display:block;color:var(--muted);margin-top:3px}.delete{border:0;background:#ff71851a;color:#ff94a3;border-radius:9px;padding:6px 9px}.chart{height:175px;width:100%;margin-top:12px;overflow:visible}.chart .grid{stroke:#294057;stroke-width:1}.chart .line{fill:none;stroke:var(--green);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}.chart .dot{fill:var(--green)}.chart text{fill:#8094a9;font-size:10px}
+    .guide-grid{display:grid;gap:10px}.guide{background:#0b1a29;border:1px solid var(--line);padding:14px;border-radius:15px}.guide b{display:block;margin-bottom:5px}.guide p{margin:0;color:#a8b7c7;font-size:13px;line-height:1.55}.danger{border-color:#69394a;background:#281521}.danger b{color:#ff9aab}.data-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.data-actions button,.file-label{border:1px solid var(--line);background:#10243a;color:#dbe7f2;border-radius:11px;padding:9px 11px;font-size:12px;font-weight:800;cursor:pointer}.file-label input{display:none}
+    .view{display:none}.view.active{display:block}.nav{position:fixed;z-index:10;left:50%;bottom:calc(10px + env(safe-area-inset-bottom));transform:translateX(-50%);width:min(calc(100% - 24px),788px);display:grid;grid-template-columns:repeat(4,1fr);gap:5px;background:#0c1a28ef;backdrop-filter:blur(18px);border:1px solid #2a4055;border-radius:20px;padding:7px;box-shadow:0 14px 45px #000a}.nav button{border:0;background:transparent;color:#8295a8;border-radius:14px;padding:8px 2px;font-size:10px;font-weight:800}.nav button span{display:block;font-size:21px;line-height:1.1;margin-bottom:3px}.nav button.active{background:#1b3349;color:#fff}.toast{position:fixed;z-index:20;left:50%;bottom:110px;transform:translate(-50%,20px);background:#effff6;color:#0b2b1c;border-radius:12px;padding:10px 14px;font-size:13px;font-weight:900;opacity:0;pointer-events:none;transition:.25s}.toast.show{opacity:1;transform:translate(-50%,0)}
+    dialog{border:1px solid var(--line);background:#0e1c2b;color:#fff;border-radius:20px;padding:19px;width:min(92vw,420px)}dialog::backdrop{background:#000a}dialog h3{margin-top:0}dialog p{font-size:13px;line-height:1.55;color:#b8c5d2}.dialog-actions{text-align:right}.dialog-actions button{border:0;border-radius:11px;padding:10px 13px;font-weight:800;background:#213a52;color:#fff}
+    @media(min-width:680px){.guide-grid{grid-template-columns:repeat(2,1fr)}}
+
+    /* Calm light theme */
+    :root{--bg:#f7f6f2;--card:#fff;--line:#e3e5e7;--text:#17191c;--muted:#747c86;--green:#2f8f5b;--blue:#2f8f5b;--orange:#b7791f;--red:#d64f5f}
+    html{background:var(--bg)}
+    body{color:var(--text);background:var(--bg)}
+    .top h1,.section-title h3,.session-title,.task-main,.week-label,.plan-row .name,.guide b{color:var(--text)}
+    .install{border-color:#d8ddda;background:#fff;color:#26312b;box-shadow:0 2px 8px #16251c0c}
+    .hero{background:#fff;border-color:#e1e5e2;box-shadow:0 10px 30px #24342a12}
+    .hero:after{display:none}
+    .week-pill{color:#286f49;background:#edf6f0;border-color:#d5e9dc}
+    .bar{background:#e7ebe8}
+    .bar i{background:var(--green)}
+    .stat{background:#f5f7f5;border-color:#ebeeec}
+    .stat span{color:#778078}
+    .card{background:#fff;border-color:#e3e5e7;box-shadow:0 7px 22px #24342a0c}
+    .callout{border-left-color:#86a58f;background:#f1f5f1;color:#526158}
+    .tag{color:#286f49;border-color:#d5e9dc;background:#edf6f0}
+    .task{border-top-color:#eceeed}
+    .task input{accent-color:var(--green)}
+    .task.done .task-main{color:#9a9fa3}
+    .task-time{color:#5f666d}
+    .complete{background:var(--green);color:#fff}
+    .complete.alt{background:#eaf2ed;color:#28724a}
+    .week-switch button{border-color:#e1e4e2;background:#f8f9f8;color:#30363a}
+    .day-tabs button{border-color:#e1e4e2;background:#fff;color:#6f767d}
+    .day-tabs button.active{background:var(--green);border-color:var(--green);color:#fff}
+    .plan-row{border-color:#e4e7e5;background:#fff}
+    .state{color:var(--green)}
+    .field input,.field textarea,.field select{border-color:#dfe3e1;background:#fff;color:#1e2225}
+    .save{background:var(--green);color:#fff}
+    .log{background:#fafbfa;border-color:#e2e5e3}
+    .delete{background:#fff0f2;color:#bd4051}
+    .chart .grid{stroke:#e1e5e2}.chart .line{stroke:var(--green)}.chart .dot{fill:var(--green)}.chart text{fill:#7b838a}
+    .guide{background:#fff;border-color:#e2e5e3}
+    .guide p{color:#69727a}
+    .guide.danger{border-color:#f0ccd2;background:#fff7f8}.guide.danger b{color:#bd4051}
+    .data-actions button,.file-label{border-color:#dfe3e1;background:#fff;color:#354039}
+    .nav{background:#fffffff2;border-color:#dfe3e1;box-shadow:0 12px 35px #2031261c}
+    .nav button{color:#7c848b}
+    .nav button.active{background:#edf5f0;color:#28724a}
+    .toast{background:#1e3026;color:#fff}
+    dialog{border-color:#dfe3e1;background:#fff;color:#1a1d1f}
+    dialog p{color:#626b72}.dialog-actions button{background:#edf5f0;color:#28724a}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="top"><div><p class="eyebrow">PROJECT 100</p><h1>12주 감량 트레이너</h1></div><button class="install" id="installBtn">홈 화면 설치</button></header>
+    <section id="todayView" class="view active">
+      <div class="hero">
+        <div class="hero-head"><div><div class="muted" id="todayDate"></div><h2 id="todayTitle">오늘의 운동</h2><div class="muted" id="todaySubtitle"></div></div><span class="week-pill" id="todayWeek">1주차</span></div>
+        <div class="bar"><i id="overallBar"></i></div><div class="muted" id="overallText">전체 완료율 0%</div>
+        <div class="hero-stats"><div class="stat"><b id="daysDone">0</b><span>완료 일수</span></div><div class="stat"><b id="totalMinutes">0</b><span>총 계획 분</span></div><div class="stat"><b id="weightDelta">—</b><span>체중 변화 kg</span></div></div>
+      </div>
+      <div class="section"><div class="section-title"><h3>오늘 할 일</h3><button class="linkbtn" data-nav="plan">전체 계획 보기</button></div><div class="callout">초반 4주는 속도보다 관절 적응이 우선입니다. 통증이 있으면 달리기를 빠른 걷기나 엘립티컬로 바꾸세요.</div><div class="card" id="todaySession"></div></div>
+      <div class="section"><div class="section-title"><h3>오늘 실제 기록</h3></div><div class="card"><div class="form-grid">
+        <div class="field"><label>운동 시간(분)</label><input id="dailyMinutes" type="number" min="0" max="300" inputmode="numeric" placeholder="예: 58"></div>
+        <div class="field"><label>거리(km)</label><input id="dailyDistance" type="number" min="0" max="50" step="0.01" inputmode="decimal" placeholder="예: 4.2"></div>
+        <div class="field"><label>난이도(RPE 1~10)</label><input id="dailyRpe" type="number" min="1" max="10" inputmode="numeric" placeholder="예: 6"></div>
+        <div class="field"><label>관절 상태</label><select id="dailyPain"><option>좋음</option><option>약간 불편</option><option>통증 있음</option></select></div>
+        <div class="field full"><label>메모</label><textarea id="dailyMemo" rows="2" placeholder="무릎, 컨디션, 사용 중량"></textarea></div>
+      </div><button class="save" id="saveDaily">오늘 기록 저장</button></div></div>
+    </section>
+    <section id="planView" class="view">
+      <div class="section-title"><h3>12주 전체 계획</h3><span class="tag">110 → 100 kg</span></div>
+      <div class="card"><div class="field"><label>프로그램 시작일</label><input type="date" id="startDate"></div><div class="week-switch"><button id="prevWeek">‹</button><div class="week-label" id="weekLabel">1주차</div><button id="nextWeek">›</button></div><div class="day-tabs" id="dayTabs"></div></div>
+      <div class="section"><div class="card" id="planSession"></div></div>
+      <div class="section"><div class="section-title"><h3>이번 주 한눈에</h3></div><div class="plan-list" id="weekOverview"></div></div>
+    </section>
+    <section id="recordView" class="view">
+      <div class="section-title"><h3>체중·컨디션 기록</h3><span class="tag">아침 공복 권장</span></div>
+      <div class="card"><div class="form-grid">
+        <div class="field"><label>날짜</label><input id="logDate" type="date"></div>
+        <div class="field"><label>체중(kg)</label><input id="logWeight" type="number" step="0.1" min="40" max="250" inputmode="decimal" placeholder="110.0"></div>
+        <div class="field"><label>허리둘레(cm, 선택)</label><input id="logWaist" type="number" step="0.1" min="40" max="250" inputmode="decimal"></div>
+        <div class="field"><label>수면(시간, 선택)</label><input id="logSleep" type="number" step="0.5" min="0" max="24" inputmode="decimal"></div>
+      </div><button class="save" id="saveWeight">기록 저장</button><svg class="chart" id="weightChart" viewBox="0 0 360 175" preserveAspectRatio="none"></svg><div class="log-list" id="logList"></div></div>
+      <div class="section"><div class="section-title"><h3>데이터 관리</h3></div><div class="card"><div class="muted" style="font-size:13px;line-height:1.55">기록은 이 기기의 브라우저에 저장됩니다. 휴대폰 변경이나 브라우저 데이터 삭제에 대비해 가끔 백업하세요.</div><div class="data-actions"><button id="exportData">백업 파일 받기</button><label class="file-label">백업 불러오기<input id="importData" type="file" accept="application/json"></label><button id="resetData">전체 초기화</button></div></div></div>
+    </section>
+    <section id="guideView" class="view">
+      <div class="section-title"><h3>운동 기준과 안전</h3></div><div class="guide-grid">
+        <div class="guide"><b>중량 선택</b><p>목표 횟수를 마쳤을 때 2~3회 더 할 수 있는 무게. 자세가 무너지면 즉시 낮춥니다.</p></div>
+        <div class="guide"><b>유산소 강도</b><p>숨은 차지만 짧은 문장은 가능한 정도(RPE 5~6). 러닝도 전력질주하지 않습니다.</p></div>
+        <div class="guide"><b>천국의계단</b><p>레벨 3~5에서 시작. 손잡이는 균형만 잡고 체중을 싣지 않습니다.</p></div>
+        <div class="guide"><b>스텝백 버피</b><p>점프 없이 한 발씩 뒤로 보냅니다. 부담이 있으면 높은 벤치를 짚습니다.</p></div>
+        <div class="guide"><b>진행 기준</b><p>목표 상단 횟수를 안정적으로 달성하면 다음번에 기구 한 칸 또는 2.5~5kg만 올립니다.</p></div>
+        <div class="guide"><b>감량 속도</b><p>목표는 평균 주 0.5~1.0kg. 매일 수치보다 7일 평균을 봅니다.</p></div>
+        <div class="guide danger"><b>즉시 중단 신호</b><p>가슴 통증, 심한 어지럼, 비정상적 숨참, 날카로운 관절 통증, 절뚝거림이 생기면 중단하세요.</p></div>
+      </div>
+    </section>
+  </main>
+  <nav class="nav"><button class="active" data-view="today"><span>◉</span>오늘</button><button data-view="plan"><span>▦</span>12주 계획</button><button data-view="record"><span>↘</span>기록</button><button data-view="guide"><span>ⓘ</span>가이드</button></nav>
+  <div class="toast" id="toast"></div>
+  <dialog id="installHelp"><h3>아이폰 홈 화면에 추가</h3><p>Safari 아래쪽의 <b>공유 버튼</b>을 누른 다음 <b>홈 화면에 추가</b>를 선택하세요.</p><div class="dialog-actions"><button id="closeInstall">확인</button></div></dialog>
+  <script src="./app.js"></script>
+</body>
+</html>
