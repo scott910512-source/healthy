@@ -8,6 +8,7 @@ const todayISO = () => {
 const base = {startDate:todayISO(), week:1, day:0, checks:{}, daily:{}, weights:[], lifts:{}};
 let data = load();
 let deferredPrompt = null;
+const taskCursor = {};
 
 function load(){
   try {
@@ -51,15 +52,42 @@ const strengthB = [
   ["데드버그","좌우 8회 × 3세트","5분"]
 ];
 const LOAD_GUIDE = {
-  "레그프레스":{label:"60~100 kg",step:10},
-  "체스트프레스":{label:"25~40 kg",step:5},
-  "랫풀다운":{label:"30~45 kg",step:5},
-  "레그컬":{label:"20~30 kg",step:5},
-  "숄더프레스":{label:"10~20 kg",step:2.5},
-  "핵스쿼트":{label:"기구 기본중량 + 0~20 kg",step:5},
-  "시티드로우":{label:"30~45 kg",step:5},
-  "인클라인 체스트프레스":{label:"20~35 kg",step:5},
-  "레그익스텐션":{label:"20~35 kg",step:5}
+  "레그프레스":{label:"60 kg",value:60,step:10},
+  "체스트프레스":{label:"20 kg",value:20,step:5},
+  "랫풀다운":{label:"25 kg",value:25,step:5},
+  "레그컬":{label:"15 kg",value:15,step:5},
+  "숄더프레스":{label:"10 kg",value:10,step:2.5},
+  "핵스쿼트":{label:"기구 최저 중량",value:null,step:5},
+  "시티드로우":{label:"25 kg",value:25,step:5},
+  "인클라인 체스트프레스":{label:"15 kg",value:15,step:5},
+  "레그익스텐션":{label:"15 kg",value:15,step:5}
+};
+const FORM_CUES = {
+  "워밍업":"보폭을 작게 시작하고 무릎과 발끝이 같은 방향을 보게 하세요.",
+  "레그프레스":"엉덩이와 허리를 등받이에 붙이고, 무릎을 완전히 잠그지 마세요.",
+  "체스트프레스":"어깨를 아래로 내리고 손잡이는 가슴 중앙 높이. 팔꿈치를 과하게 뒤로 보내지 마세요.",
+  "랫풀다운":"가슴을 살짝 들고 바를 쇄골 쪽으로 당기세요. 목 뒤로 당기거나 반동을 쓰지 마세요.",
+  "레그컬":"골반을 패드에 고정하고 천천히 굽히세요. 허리가 뜨면 중량을 낮추세요.",
+  "숄더프레스":"허리를 과하게 젖히지 말고 팔꿈치는 손목 아래에 두세요. 어깨 통증 시 즉시 중단하세요.",
+  "핵스쿼트":"발 전체로 밀고 무릎은 발끝 방향으로 움직이세요. 무릎이 안쪽으로 모이지 않게 하세요.",
+  "시티드로우":"가슴을 세우고 팔이 아닌 팔꿈치로 당기세요. 몸을 앞뒤로 흔들지 마세요.",
+  "인클라인 체스트프레스":"견갑을 등받이에 고정하고 손목을 곧게 유지하세요. 어깨 앞쪽 통증을 참지 마세요.",
+  "레그익스텐션":"반동 없이 올리고 천천히 내리세요. 무릎을 세게 잠그지 마세요.",
+  "데드버그":"허리를 바닥에 붙인 채 팔다리를 뻗으세요. 허리가 뜨면 가동범위를 줄이세요.",
+  "준비 걷기":"상체를 세우고 발뒤꿈치부터 부드럽게 디디세요.",
+  "런/워크 인터벌":"보폭을 줄이고 몸 바로 아래에 착지하세요. 무릎·발목의 날카로운 통증은 중단 신호입니다.",
+  "마무리 걷기":"갑자기 멈추지 말고 호흡과 심박이 내려올 때까지 천천히 걸으세요.",
+  "종아리·둔근 스트레칭":"반동 없이 당기는 느낌까지만. 통증이 나는 범위까지 누르지 마세요.",
+  "빠른 걷기 또는 엘립티컬":"허리를 세우고 손잡이에 체중을 싣지 마세요.",
+  "가벼운 스트레칭":"호흡을 멈추지 말고 각 자세를 편안하게 유지하세요.",
+  "천국의계단":"발바닥을 계단에 충분히 올리고 손잡이는 균형만 잡으세요. 허리를 숙여 매달리지 마세요.",
+  "엘립티컬":"무릎과 발끝을 같은 방향으로 두고 상체가 좌우로 흔들리지 않게 하세요.",
+  "높은 곳 짚고 푸시업":"머리부터 발뒤꿈치까지 일직선. 팔꿈치는 몸통에서 약 45도로 벌리세요.",
+  "맨몸 스쿼트":"엉덩이를 뒤로 보내며 앉고 무릎은 발끝 방향을 따라가게 하세요.",
+  "스텝백 버피":"점프하지 말고 한 발씩 움직이세요. 허리가 꺾이지 않도록 배에 힘을 주세요.",
+  "플랭크":"엉덩이가 처지거나 들리지 않게 하고 허리 통증 전 종료하세요.",
+  "선택 산책":"대화 가능한 편한 강도로 걷고 통증이 있으면 쉬세요.",
+  "회복 확인":"한쪽 관절의 통증이나 절뚝거림이 남으면 다음 운동 강도를 낮추세요."
 };
 function nextLoad(weight,rpe,step){
   if(!weight) return "실제 중량을 기록하면 다음 추천이 표시됩니다";
@@ -120,16 +148,18 @@ function session(w,d){
 }
 function taskHTML(s,k){
   const checked=completedFor(k);
+  if(taskCursor[k]==null) taskCursor[k]=Math.max(0,s.tasks.findIndex(function(_,i){return checked.indexOf(i)<0;}));
+  taskCursor[k]=Math.min(s.tasks.length-1,Math.max(0,taskCursor[k]));
+  const i=taskCursor[k],t=s.tasks[i],done=checked.indexOf(i)>=0,guide=LOAD_GUIDE[t[0]];
   let html='<div class="session-head"><div><div class="session-title">'+esc(s.title)+'</div><div class="session-meta">예상 '+s.minutes+'분 · '+esc(s.type)+'</div></div><span class="tag">'+esc(s.type)+'</span></div>';
-  s.tasks.forEach(function(t,i){
-    const done=checked.indexOf(i)>=0;
-    html+='<label class="task '+(done?'done':'')+'"><input type="checkbox" data-task="'+i+'" '+(done?'checked':'')+'><span><div class="task-main">'+esc(t[0])+'</div><div class="task-sub">'+esc(t[1])+'</div></span><span class="task-time">'+esc(t[2])+'</span></label>';
-    const guide=LOAD_GUIDE[t[0]];
-    if(guide){
-      const liftKey=k+"-"+i, saved=data.lifts[liftKey]||{};
-      html+='<div class="load-box"><div class="load-guide"><b>초기 추천 '+esc(guide.label)+'</b><span>마지막 2~3회 여유가 남는 무게</span></div><div class="load-inputs"><label>실제 kg<input type="number" min="0" max="500" step="2.5" inputmode="decimal" value="'+esc(saved.weight||"")+'" data-lift-weight="'+i+'" placeholder="kg"></label><label>RPE<input type="number" min="1" max="10" step="1" inputmode="numeric" value="'+esc(saved.rpe||"")+'" data-lift-rpe="'+i+'" placeholder="1~10"></label></div><div class="next-load" data-next="'+i+'">'+esc(nextLoad(Number(saved.weight),Number(saved.rpe),guide.step))+'</div></div>';
-    }
-  });
+  html+='<div class="task-progress"><span>'+(i+1)+' / '+s.tasks.length+'</span><i><b style="width:'+((i+1)/s.tasks.length*100)+'%"></b></i></div>';
+  html+='<div class="task-slide"><label class="task '+(done?'done':'')+'"><input type="checkbox" data-task="'+i+'" '+(done?'checked':'')+'><span><div class="task-main">'+esc(t[0])+'</div><div class="task-sub">'+esc(t[1])+'</div></span><span class="task-time">'+esc(t[2])+'</span></label>';
+  if(FORM_CUES[t[0]]) html+='<div class="form-cue"><b>자세 체크</b><span>'+esc(FORM_CUES[t[0]])+'</span></div>';
+  if(guide){
+    const liftKey=k+"-"+i, saved=data.lifts[liftKey]||{},initial=saved.weight||guide.value||"";
+    html+='<div class="load-box"><div class="load-guide"><b>초보 시작 무게 '+esc(guide.label)+'</b><span>첫 세트 후 가볍게 조정</span></div><div class="load-inputs"><label>실제 kg<input type="number" min="0" max="500" step="2.5" inputmode="decimal" value="'+esc(initial)+'" data-lift-weight="'+i+'" placeholder="kg"></label><label>RPE<input type="number" min="1" max="10" step="1" inputmode="numeric" value="'+esc(saved.rpe||"")+'" data-lift-rpe="'+i+'" placeholder="1~10"></label></div><div class="next-load" data-next="'+i+'">'+esc(nextLoad(Number(saved.weight),Number(saved.rpe),guide.step))+'</div></div>';
+  }
+  html+='</div><div class="task-nav"><button data-prev-task '+(i===0?'disabled':'')+'>이전</button><button class="next-task" data-next-task '+(i===s.tasks.length-1?'disabled':'')+'>'+(i===s.tasks.length-1?'마지막 운동':'다음 운동')+'</button></div>';
   const all=checked.length===s.tasks.length;
   html+='<button class="complete '+(all?'alt':'')+'" data-all>'+(all?'완료 취소':'오늘 운동 전체 완료')+'</button>';
   return html;
@@ -148,6 +178,8 @@ function wireTasks(container,k,s){
     persist(); render();
     toast(data.checks[k].length?"운동 완료! 수고했어요.":"완료를 취소했어요.");
   };
+  container.querySelector("[data-prev-task]").onclick=function(){taskCursor[k]=Math.max(0,taskCursor[k]-1);render();};
+  container.querySelector("[data-next-task]").onclick=function(){taskCursor[k]=Math.min(s.tasks.length-1,taskCursor[k]+1);render();};
   function saveLift(i){
     const task=s.tasks[i],guide=LOAD_GUIDE[task[0]];
     if(!guide) return;
@@ -276,4 +308,7 @@ document.querySelector("#installBtn").onclick=async function(){
 };
 document.querySelector("#closeInstall").onclick=function(){document.querySelector("#installHelp").close();};
 if("serviceWorker" in navigator) window.addEventListener("load",function(){navigator.serviceWorker.register("./sw.js").catch(function(){});});
+document.addEventListener("dblclick",function(e){e.preventDefault();},{passive:false});
+document.addEventListener("gesturestart",function(e){e.preventDefault();},{passive:false});
+document.addEventListener("gesturechange",function(e){e.preventDefault();},{passive:false});
 render();
