@@ -5,12 +5,16 @@ const todayISO = () => {
   d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
   return d.toISOString().slice(0,10);
 };
-const base = {startDate:todayISO(), week:1, day:0, checks:{}, daily:{}, weights:[]};
+const base = {startDate:todayISO(), week:1, day:0, checks:{}, daily:{}, weights:[], lifts:{}};
 let data = load();
 let deferredPrompt = null;
 
 function load(){
-  try { return Object.assign({}, base, JSON.parse(localStorage.getItem(STORE_KEY) || "{}")); }
+  try {
+    const saved=Object.assign({}, base, JSON.parse(localStorage.getItem(STORE_KEY) || "{}"));
+    saved.checks=saved.checks||{}; saved.daily=saved.daily||{}; saved.weights=saved.weights||[]; saved.lifts=saved.lifts||{};
+    return saved;
+  }
   catch(e) { return Object.assign({}, base); }
 }
 function persist(){ localStorage.setItem(STORE_KEY, JSON.stringify(data)); }
@@ -46,6 +50,24 @@ const strengthB = [
   ["레그컬","2세트 × 12~15회 · 휴식 60초","5분"],
   ["데드버그","좌우 8회 × 3세트","5분"]
 ];
+const LOAD_GUIDE = {
+  "레그프레스":{label:"60~100 kg",step:10},
+  "체스트프레스":{label:"25~40 kg",step:5},
+  "랫풀다운":{label:"30~45 kg",step:5},
+  "레그컬":{label:"20~30 kg",step:5},
+  "숄더프레스":{label:"10~20 kg",step:2.5},
+  "핵스쿼트":{label:"기구 기본중량 + 0~20 kg",step:5},
+  "시티드로우":{label:"30~45 kg",step:5},
+  "인클라인 체스트프레스":{label:"20~35 kg",step:5},
+  "레그익스텐션":{label:"20~35 kg",step:5}
+};
+function nextLoad(weight,rpe,step){
+  if(!weight) return "실제 중량을 기록하면 다음 추천이 표시됩니다";
+  if(!rpe) return "RPE도 입력하면 다음 중량을 계산합니다";
+  if(rpe<=7) return "다음 추천 "+(weight+step)+" kg";
+  if(rpe<=8) return "다음에도 "+weight+" kg 유지";
+  return "다음 추천 "+Math.max(0,weight-step)+" kg · 자세 우선";
+}
 function runPrescription(w,second){
   const patterns=[[1,2,8],[1,2,10],[2,2,8],[2,2,10],[3,2,8],[3,2,9],[2,2,8],[4,2,7],[5,2,6],[8,2,4],[12,2,3],[20,2,2]];
   const p=patterns[w-1].slice();
@@ -102,6 +124,11 @@ function taskHTML(s,k){
   s.tasks.forEach(function(t,i){
     const done=checked.indexOf(i)>=0;
     html+='<label class="task '+(done?'done':'')+'"><input type="checkbox" data-task="'+i+'" '+(done?'checked':'')+'><span><div class="task-main">'+esc(t[0])+'</div><div class="task-sub">'+esc(t[1])+'</div></span><span class="task-time">'+esc(t[2])+'</span></label>';
+    const guide=LOAD_GUIDE[t[0]];
+    if(guide){
+      const liftKey=k+"-"+i, saved=data.lifts[liftKey]||{};
+      html+='<div class="load-box"><div class="load-guide"><b>초기 추천 '+esc(guide.label)+'</b><span>마지막 2~3회 여유가 남는 무게</span></div><div class="load-inputs"><label>실제 kg<input type="number" min="0" max="500" step="2.5" inputmode="decimal" value="'+esc(saved.weight||"")+'" data-lift-weight="'+i+'" placeholder="kg"></label><label>RPE<input type="number" min="1" max="10" step="1" inputmode="numeric" value="'+esc(saved.rpe||"")+'" data-lift-rpe="'+i+'" placeholder="1~10"></label></div><div class="next-load" data-next="'+i+'">'+esc(nextLoad(Number(saved.weight),Number(saved.rpe),guide.step))+'</div></div>';
+    }
   });
   const all=checked.length===s.tasks.length;
   html+='<button class="complete '+(all?'alt':'')+'" data-all>'+(all?'완료 취소':'오늘 운동 전체 완료')+'</button>';
@@ -121,6 +148,20 @@ function wireTasks(container,k,s){
     persist(); render();
     toast(data.checks[k].length?"운동 완료! 수고했어요.":"완료를 취소했어요.");
   };
+  function saveLift(i){
+    const task=s.tasks[i],guide=LOAD_GUIDE[task[0]];
+    if(!guide) return;
+    const weight=Number(container.querySelector('[data-lift-weight="'+i+'"]').value)||null;
+    const rpe=Number(container.querySelector('[data-lift-rpe="'+i+'"]').value)||null;
+    if(weight||rpe) data.lifts[k+"-"+i]={name:task[0],weight:weight,rpe:rpe,date:todayISO()};
+    else delete data.lifts[k+"-"+i];
+    persist();
+    container.querySelector('[data-next="'+i+'"]').textContent=nextLoad(weight,rpe,guide.step);
+    toast("사용 중량을 저장했어요.");
+  }
+  container.querySelectorAll("[data-lift-weight],[data-lift-rpe]").forEach(function(input){
+    input.onchange=function(){saveLift(Number(input.dataset.liftWeight??input.dataset.liftRpe));};
+  });
 }
 function programPosition(){
   const start=new Date(data.startDate+"T00:00:00");
